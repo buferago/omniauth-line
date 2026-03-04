@@ -1,37 +1,37 @@
 # OmniAuth LINE Login
 
-OmniAuth strategy for [LINE Login](https://developers.line.biz/en/docs/line-login/overview/) with OpenID Connect email support.
+[LINE Login](https://developers.line.biz/ja/docs/line-login/overview/) 用の OmniAuth ストラテジーです。OpenID Connect の ID トークンからメールアドレスを取得できます。
 
-This is a fork of [omniauth-line](https://github.com/kazasiki/omniauth-line) by kazasiki, enhanced with ID Token verification to extract `email` and `email_verified` claims via LINE's `/oauth2/v2.1/verify` API.
+[kazasiki/omniauth-line](https://github.com/kazasiki/omniauth-line) のフォーク版で、LINE の `/oauth2/v2.1/verify` API による ID トークン検証機能を追加しています。
 
-## Installation
+## インストール
 
-Add to your Gemfile:
+Gemfile に追加してください：
 
 ```ruby
 gem 'omniauth-line-login'
 ```
 
-Then `bundle install`.
+その後 `bundle install` を実行します。
 
-## Usage
+## 使い方
 
 ```ruby
-# config/initializers/omniauth.rb or devise.rb
+# config/initializers/omniauth.rb または devise.rb
 config.omniauth :line, ENV['LINE_CHANNEL_ID'], ENV['LINE_CHANNEL_SECRET'],
   scope: 'profile openid email'
 ```
 
-**Important**: The `email` scope is required to receive an ID Token containing email claims. You must also apply for the "Email address" permission in your LINE Developers Console channel settings.
+**重要**: メールアドレスを含む ID トークンを取得するには `email` スコープが必要です。LINE Developers Console のチャネル設定で「メールアドレス取得権限」を申請してください。
 
-## What's Different from omniauth-line
+## omniauth-line との違い
 
-The original `omniauth-line` gem only calls LINE's `/v2/profile` API, which does not return email. This fork adds:
+オリジナルの `omniauth-line` は LINE の `/v2/profile` API のみを呼び出すため、メールアドレスを返しません。本フォークでは以下を追加しています：
 
-- **ID Token verification** via LINE's `/oauth2/v2.1/verify` API (server-side verification)
-- **`info[:email]`** — extracted from the verified ID Token claims
-- **`info[:email_verified]`** — the `email_verified` claim from the ID Token
-- **`extra[:id_token_claims]`** — full ID Token claims for debugging and extension
+- **ID トークン検証** — LINE の `/oauth2/v2.1/verify` API によるサーバーサイド検証
+- **`info[:email]`** — 検証済み ID トークンのクレームから取得したメールアドレス
+- **`info[:email_verified]`** — ID トークンの `email_verified` クレーム
+- **`extra[:id_token_claims]`** — デバッグや拡張用の ID トークンクレーム全体
 
 ## Auth Hash
 
@@ -39,31 +39,31 @@ The original `omniauth-line` gem only calls LINE's `/v2/profile` API, which does
 {
   uid: 'U02fa1e93...',
   info: {
-    name: 'Display Name',
+    name: '表示名',
     image: 'https://profile.line-scdn.net/...',
-    description: 'Status message',
-    email: 'user@example.com',        # NEW
-    email_verified: true               # NEW
+    description: 'ステータスメッセージ',
+    email: 'user@example.com',        # 追加
+    email_verified: true               # 追加
   },
   extra: {
-    raw_info: { ... },                 # LINE /v2/profile response
-    id_token_claims: { ... }           # NEW: verified ID Token claims
+    raw_info: { ... },                 # LINE /v2/profile レスポンス
+    id_token_claims: { ... }           # 追加: 検証済み ID トークンクレーム
   }
 }
 ```
 
-## Error Handling
+## エラーハンドリング
 
-If the ID Token is not present (e.g., `openid` scope not included) or the verify API returns an error, `email` and `email_verified` will be `nil` and the application can fall back to its own email collection flow. Errors are logged via `OmniAuth.logger`.
+ID トークンが存在しない場合（`openid` スコープ未指定など）や verify API がエラーを返した場合、`email` と `email_verified` は `nil` になります。アプリケーション側で独自のメール収集フローにフォールバックできます。エラーは `OmniAuth.logger` で記録されます。
 
-## Nonce Verification
+## Nonce 検証について
 
-This gem does **not** perform nonce verification. If your application requires nonce validation, you can access the nonce from `extra[:id_token_claims]['nonce']` and verify it in your callback controller.
+本 gem では nonce 検証は行いません。nonce のバリデーションが必要な場合は、`extra[:id_token_claims]['nonce']` から nonce を取得してコールバックコントローラーで検証してください。
 
-## License
+## ライセンス
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License。詳細は [LICENSE](LICENSE) を参照してください。
 
-Original work by [kazasiki](https://github.com/kazasiki/omniauth-line).
+オリジナル: [kazasiki/omniauth-line](https://github.com/kazasiki/omniauth-line)
 
-Repository: [buferago/omniauth-line](https://github.com/buferago/omniauth-line)
+リポジトリ: [buferago/omniauth-line](https://github.com/buferago/omniauth-line)
