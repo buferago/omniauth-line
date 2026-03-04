@@ -5,8 +5,8 @@ require "omniauth-line-login/version"
 Gem::Specification.new do |s|
   s.name        = "omniauth-line-login"
   s.version     = OmniAuth::Line::VERSION
-  s.authors     = ["kazasiki", "buferago"]
-  s.email       = ["kazasiki@gmail.com"]
+  s.authors     = ["buferago"]
+  s.email       = ["buferago@users.noreply.github.com"]
   s.homepage    = "https://github.com/buferago/omniauth-line"
   s.description = %q{OmniAuth strategy for LINE Login with OpenID Connect email support}
   s.summary     = %q{OmniAuth strategy for LINE Login - fork with ID token email extraction}
